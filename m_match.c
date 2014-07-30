@@ -24,5 +24,20 @@ int main(void) {
     assert(compare_pi_tj(4, p, 4, A));
     assert(compare_pi_tj(0, p, 0, A));
     printf("All tests succeeded!\n");
+
+    int* output = malloc(13 * sizeof(int));
+    int matches = mmatch_match("ababbaaaaababaa", 15, "ababb", 5, output);
+    int i;
+    for (i = 0; i < matches - 1; i++) {
+        printf("%d, ", output[i]);
+    }
+    printf("%d\n", output[matches - 1]);
+
+    output = realloc(output, 13 * sizeof(int));
+    matches = mmatch_match("ababaabbababbababb", 18, "ababb", 5, output);
+    for (i = 0; i < matches - 1; i++) {
+        printf("%d, ", output[i]);
+    }
+    printf("%d\n", output[matches - 1]);
     return 0;
 }

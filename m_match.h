@@ -33,7 +33,38 @@ int compare_pi_tj(int i, char* t, int j, int* A) {
         for (cnt = j - i; cnt < j; cnt++) if (t[j] == t[cnt]) return 0;
         return 1;
     }
-    else return 0;
+    return 0;
+}
+
+void mmatch_failure(char* P, int m, int* failure, int* A) {
+    int i = 0, j;
+    failure[0] = 0;
+    for (j = 1; j < m - 1; j++) {
+        //TODO: Switch to using compare_pi_pj once that's working.
+        while (i > 0 && !compare_pi_tj(i, P, j, A)) i = failure[i - 1];
+        if (compare_pi_tj(i, P, j, A)) i++;
+        failure[j] = i;
+    }
+}
+
+int mmatch_match(char* T, int n, char* P, int m, int* output) {
+    int* A = malloc(m * sizeof(int));
+    construct_table(P, m, A);
+    int* failure = malloc(m * sizeof(int));
+    mmatch_failure(P, m, failure, A);
+    int i = 0, j, matches = 0;
+    for (j = 0; j < n; j++) {
+        while (i > 0 && !compare_pi_tj(i, T, j, A)) {
+            i = failure[i - 1];
+        }
+        if (compare_pi_tj(i, T, j, A)) i++;
+        if (i == m) {
+            output[matches++] = j - m + 1;
+            i = failure[i - 1];
+        }
+    }
+    output = (int*) realloc(output, matches * sizeof(int));
+    return matches;
 }
 
 #endif
