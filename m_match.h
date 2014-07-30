@@ -1,3 +1,6 @@
+#ifndef M_MATCH
+#define M_MATCH
+
 #include "trees/red_black_tree/red_black_tree/rbtree.c"
 
 int compare_char(void* leftp, void* rightp) {
@@ -32,3 +35,5 @@ int compare_pi_tj(int i, char* t, int j, int* A) {
     }
     else return 0;
 }
+
+#endif
