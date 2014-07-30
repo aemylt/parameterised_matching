@@ -154,9 +154,9 @@ node lookup_node(rbtree t, void* key, compare_func compare) {
     }
     return n;
 }
-void* rbtree_lookup(rbtree t, void* key, compare_func compare) {
+void* rbtree_lookup(rbtree t, void* key, void* def, compare_func compare) {
     node n = lookup_node(t, key, compare);
-    return n == NULL ? NULL : n->value;
+    return n == NULL ? def : n->value;
 }
 void rotate_left(rbtree t, node n) {
     node r = n->right;
