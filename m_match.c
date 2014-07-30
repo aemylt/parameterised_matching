@@ -13,7 +13,6 @@ int compare(int* A, int* B, int m) {
 
 int main(void) {
     int m = 10;
-    int i;
     char* p = "aaaaabbbbb";
     int* A = (int*)malloc(m * sizeof(int));
     int* correct = (int*)malloc(m * sizeof(int));
@@ -21,5 +20,9 @@ int main(void) {
     correct[5] = 5; correct[6] = 5; correct[7] = 6; correct[8] = 7; correct[9] = 8;
     construct_table(p, m, A);
     assert(compare(A, correct, m));
+    assert(!compare_pi_tj(4, p, 5, A));
+    assert(compare_pi_tj(4, p, 4, A));
+    assert(compare_pi_tj(0, p, 0, A));
+    printf("All tests succeeded!\n");
     return 0;
 }

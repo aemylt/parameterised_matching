@@ -22,3 +22,13 @@ void construct_table(char* p, int m, int* A) {
         rbtree_insert(symbols, (void*)p[i], (void*)i, compare_char);
     }
 }
+
+int compare_pi_tj(int i, char* t, int j, int* A) {
+    if ((A[i] != i) && (t[j] == t[j - i + A[i]])) return 1;
+    else if (A[i] == i) {
+        int cnt;
+        for (cnt = j - i; cnt < j; cnt++) if (t[j] == t[cnt]) return 0;
+        return 1;
+    }
+    else return 0;
+}
