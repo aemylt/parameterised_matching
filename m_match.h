@@ -28,7 +28,7 @@ void construct_table(char* p, int m, int* A) {
 
 int compare_pi_tj(int i, char* t, int j, int* A) {
     if ((A[i] != i) && (t[j] == t[j - i + A[i]])) return 1;
-    else if (A[i] == i) {
+    if (A[i] == i) {
         int cnt;
         for (cnt = j - i; cnt < j; cnt++) if (t[j] == t[cnt]) return 0;
         return 1;
@@ -36,13 +36,18 @@ int compare_pi_tj(int i, char* t, int j, int* A) {
     return 0;
 }
 
+int compare_pi_pj(int i, char* p, int j, int* A) {
+    if ((j - A[j] <= i - 1) && (A[i] == i)) return 1;
+    if ((j - A[j] >= i - 1) && (p[j] == p[j - i + A[i]])) return 1;
+    return 0;
+}
+
 void mmatch_failure(char* P, int m, int* failure, int* A) {
     int i = 0, j;
     failure[0] = 0;
     for (j = 1; j < m - 1; j++) {
-        //TODO: Switch to using compare_pi_pj once that's working.
-        while (i > 0 && !compare_pi_tj(i, P, j, A)) i = failure[i - 1];
-        if (compare_pi_tj(i, P, j, A)) i++;
+        while (i > 0 && !compare_pi_pj(i, P, j, A)) i = failure[i - 1];
+        if (compare_pi_pj(i, P, j, A)) i++;
         failure[j] = i;
     }
 }
