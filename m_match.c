@@ -21,9 +21,12 @@ int main(void) {
     correct[5] = 5; correct[6] = 5; correct[7] = 6; correct[8] = 7; correct[9] = 8;
     construct_table(p, m, A);
     assert(compare(A, correct, m));
-    assert(!compare_pi_tj(4, p, 5, A));
-    assert(compare_pi_tj(4, p, 4, A));
-    assert(compare_pi_tj(0, p, 0, A));
+    rbtree test = rbtree_create();
+    rbtree_insert(test, (void*)'a', (void*)3, compare_char);
+    assert(!compare_pi_tj(4, 'b', test, 5, A));
+    assert(compare_pi_tj(4, 'a', test, 4, A));
+    rbtree_delete(test, (void*)'a', compare_char);
+    assert(compare_pi_tj(0, 'a', test, 0, A));
     assert(!compare_pi_pj(4, p, 5, A));
     assert(compare_pi_pj(5, p, 5, A));
     assert(compare_pi_pj(0, p, 0, A));
