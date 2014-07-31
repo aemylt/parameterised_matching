@@ -38,7 +38,7 @@ void preprocess(char* T, int n, char* sigma, int s_sigma, char* T_p) {
     }
     a++;
     for (i = 0; i < n; i++) {
-        T_p[i] = (rbtree_lookup(symbols, (void*)T[i], (void*)0, compare_char) == 0) ? a : T[i];
+        T_p[i] = (rbtree_lookup(symbols, (void*)T[i], (void*)0, compare_char)) ? T[i] : a;
     }
 }
 
