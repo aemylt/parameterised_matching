@@ -12,6 +12,7 @@ int compare(int* A, int* B, int m) {
 }
 
 int main(void) {
+    int n;
     int m = 10;
     char* p = "aaaaabbbbb";
     int* A = (int*)malloc(m * sizeof(int));
@@ -23,21 +24,35 @@ int main(void) {
     assert(!compare_pi_tj(4, p, 5, A));
     assert(compare_pi_tj(4, p, 4, A));
     assert(compare_pi_tj(0, p, 0, A));
+    assert(!compare_pi_pj(4, p, 5, A));
+    assert(compare_pi_pj(5, p, 5, A));
+    assert(compare_pi_pj(0, p, 0, A));
+
+    n = 15; m = 5;
+    int correct_matches = 2;
+    correct = realloc(correct, correct_matches);
+    correct[0] = 0; correct[1] = 10;
+    int* output = malloc((n - m) * sizeof(int));
+    int matches = mmatch_match("ababbaaaaababaa", n, "ababb", m, output);
+    assert(correct_matches == matches && compare(output, correct, matches));
+
+    n = 18; m = 5;
+    correct_matches = 3;
+    correct = realloc(correct, correct_matches);
+    correct[0] = 1; correct[1] = 8; correct[2] = 13;
+    output = realloc(output, (n - m) * sizeof(int));
+    matches = mmatch_match("ababaabbababbababb", n, "ababb", m, output);
+    assert(correct_matches == matches && compare(output, correct, matches));
+
+    n = 18; m = 5;
+    correct_matches = 0;
+    correct = realloc(correct, correct_matches);
+    output = realloc(output, (n - m) * sizeof(int));
+    matches = mmatch_match("ababababababababab", n, "ababb", m, output);
+    assert(correct_matches == matches);
+
+    free(A);
+
     printf("All tests succeeded!\n");
-
-    int* output = malloc(13 * sizeof(int));
-    int matches = mmatch_match("ababbaaaaababaa", 15, "ababb", 5, output);
-    int i;
-    for (i = 0; i < matches - 1; i++) {
-        printf("%d, ", output[i]);
-    }
-    printf("%d\n", output[matches - 1]);
-
-    output = realloc(output, 13 * sizeof(int));
-    matches = mmatch_match("ababaabbababbababb", 18, "ababb", 5, output);
-    for (i = 0; i < matches - 1; i++) {
-        printf("%d, ", output[i]);
-    }
-    printf("%d\n", output[matches - 1]);
     return 0;
 }
