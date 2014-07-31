@@ -13,6 +13,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=19567
 */
 
+#ifndef RBTREE
+#define RBTREE
+
 #include "rbtree.h"
 #include <assert.h>
 #include <stdlib.h>
@@ -376,3 +379,5 @@ void delete_case6(rbtree t, node n) {
         rotate_right(t, n->parent);
     }
 }
+
+#endif

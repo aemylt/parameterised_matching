@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "m_match.h"
+#include "trees/red_black_tree/red_black_tree/rbtree.c"
 
 int compare(int* A, int* B, int m) {
     int i;
