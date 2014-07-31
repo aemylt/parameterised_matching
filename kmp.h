@@ -1,8 +1,28 @@
+/*
+    kmp.h
+    Implementation of the Knuth-Morris-Pratt pattern matching algorithm.
+    More information is available here: http://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
+    This variant of the algorithm is from lecture slides courtesy of Dr Raphael Clifford: (private link) https://www.cs.bris.ac.uk/Teaching/Resources/COMS21103/material-dima/string_matching.pdf
+*/
+
 #ifndef KMP
 #define KMP
 #include <stdlib.h>
 #include <stdio.h>
 
+/*
+    void kmp_failure(char* P, int m, int* failure)
+    Constructs the failure table for pattern P.
+    Parameters:
+        char* P       - Pattern
+        int   m       - Length of pattern
+        int*  failure - Variable for failure table to be returned in
+    Returns void:
+        Value returned in failure parameter
+        failure[i] = longest prefix of P[0:i] that is also a suffix of P[0:i]
+    Notes:
+        |P| == |failure| == m
+*/
 void kmp_failure(char* P, int m, int* failure) {
     int i = 0, j;
     failure[0] = 0;
@@ -13,6 +33,23 @@ void kmp_failure(char* P, int m, int* failure) {
     }
 }
 
+/*
+    int kmp_match(char* T, int n, char* P, int m, int* output)
+    Finds all occurances of P in T via the Knuth-Morris-Pratt algorithm.
+    Parameters:
+        char* T      - Text to search
+        int   n      - Length of text
+        char* P      - Pattern to search for
+        int   m      - Length of pattern
+        int*  output - Variable for match indexes to be returned in
+    Returns int:
+        Number of matches found
+        Match indexes returned in output parameter
+    Notes:
+        |T| == n
+        |P| == m
+        |output| == n - m + 1 (maximum number of matches)
+*/
 int kmp_match(char* T, int n, char* P, int m, int* output) {
     int* failure = malloc(m * sizeof(int));
     kmp_failure(P, m, failure);
