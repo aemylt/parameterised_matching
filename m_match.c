@@ -11,6 +11,13 @@ int compare(int* A, int* B, int m) {
     return 1;
 }
 
+void test_match(char* T, int n, char* P, int m, int correct_matches, int* correct) {
+    int* output = malloc((n - m + 1) * sizeof(int));
+    int matches = mmatch_match(T, n, P, m, output);
+    assert(correct_matches == matches && compare(output, correct, matches));
+    if (matches > 0) free(output);
+}
+
 int main(void) {
     int n;
     int m = 10;
@@ -33,26 +40,26 @@ int main(void) {
 
     n = 15; m = 5;
     int correct_matches = 2;
-    correct = realloc(correct, correct_matches);
+    correct = realloc(correct, correct_matches * sizeof(int));
     correct[0] = 0; correct[1] = 10;
-    int* output = malloc((n - m) * sizeof(int));
-    int matches = mmatch_match("ababbaaaaababaa", n, "ababb", m, output);
-    assert(correct_matches == matches && compare(output, correct, matches));
+    test_match("ababbaaaaababaa", n, "ababb", m, correct_matches, correct);
+
+    n = 15; m = 5;
+    correct_matches = 2;
+    correct = realloc(correct, correct_matches * sizeof(int));
+    correct[0] = 0; correct[1] = 10;
+    test_match("cdcddcccccdcdcc", n, "ababb", m, correct_matches, correct);
 
     n = 18; m = 5;
     correct_matches = 3;
-    correct = realloc(correct, correct_matches);
+    correct = realloc(correct, correct_matches * sizeof(int));
     correct[0] = 1; correct[1] = 8; correct[2] = 13;
-    output = realloc(output, (n - m) * sizeof(int));
-    matches = mmatch_match("ababaabbababbababb", n, "ababb", m, output);
-    assert(correct_matches == matches && compare(output, correct, matches));
+    test_match("ababaabbababbababb", n, "ababb", m, correct_matches, correct);
 
     n = 18; m = 5;
     correct_matches = 0;
-    correct = realloc(correct, correct_matches);
-    output = realloc(output, (n - m) * sizeof(int));
-    matches = mmatch_match("ababababababababab", n, "ababb", m, output);
-    assert(correct_matches == matches);
+    correct = realloc(correct, correct_matches * sizeof(int));
+    test_match("ababababababababab", n, "ababb", m, correct_matches, correct);
 
     free(A);
 
