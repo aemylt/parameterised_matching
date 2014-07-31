@@ -1,15 +1,8 @@
 #include "kmp.h"
+#include "shared_funcs.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-
-int compare(int* A, int* B, int m) {
-    int i;
-    for (i = 0; i < m; i++) {
-        if (A[i] != B[i]) return 0;
-    }
-    return 1;
-}
 
 int main(void) {
     int n = 18, m = 5;

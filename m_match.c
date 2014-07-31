@@ -3,14 +3,7 @@
 #include <stdlib.h>
 #include "m_match.h"
 #include "trees/red_black_tree/red_black_tree/rbtree.c"
-
-int compare(int* A, int* B, int m) {
-    int i;
-    for (i = 0; i < m; i++) {
-        if (A[i] != B[i]) return 0;
-    }
-    return 1;
-}
+#include "shared_funcs.h"
 
 void test_match(char* T, int n, char* P, int m, int correct_matches, int* correct) {
     int* output = malloc((n - m + 1) * sizeof(int));
