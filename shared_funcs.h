@@ -42,13 +42,9 @@ int compare(int* A, int* B, int m) {
 int compare_char(void* leftp, void* rightp) {
     char left = (char)leftp;
     char right = (char)rightp;
-    if (left < right) 
-        return -1;
-    else if (left > right)
-        return 1;
-    else {
-        return 0;
-    }
+    if (left < right) return -1;
+    else if (left > right) return 1;
+    else return 0;
 }
 
 #endif

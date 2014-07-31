@@ -65,6 +65,7 @@ int kmp_match(char* T, int n, char* P, int m, int* output) {
         }
     }
     output = (int*) realloc(output, matches * sizeof(int));
+    free(failure);
     return matches;
 }
 

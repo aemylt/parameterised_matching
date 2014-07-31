@@ -133,6 +133,8 @@ int mmatch_match(char* T, int n, char* P, int m, int* output) {
         rbtree_insert(text, (void*)T[j], (void*)j, compare_char);
     }
     output = (int*) realloc(output, matches * sizeof(int));
+    free(A);
+    free(failure);
     return matches;
 }
 
