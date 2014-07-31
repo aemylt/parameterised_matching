@@ -30,6 +30,12 @@ int main(void) {
     correct[0] = 8;
     test_match("ababaabbababcababd", n, "ababc", m, "cd", 2, "ab", 2, correct_matches, correct);
 
+    n = 5; m = 5;
+    correct_matches = 1;
+    correct = realloc(correct, correct_matches * sizeof(int));
+    correct[0] = 0;
+    test_match("ababc", n, "ababc", m, "cd", 2, "ab", 2, correct_matches, correct);
+
     n = 18; m = 5;
     correct_matches = 0;
     correct = realloc(correct, correct_matches * sizeof(int));
