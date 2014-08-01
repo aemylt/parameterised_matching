@@ -77,7 +77,7 @@ int main() {
         printf("Inserting %d -> %d\n\n", x, y);
 #endif
         rbtree_insert(t, (void*)x, (void*)y, compare_int);
-        assert(rbtree_lookup(t, (void*)x, compare_int) == (void*)y);
+        assert(rbtree_lookup(t, (void*)x, -1, compare_int) == (void*)y);
     }
     for(i=0; i<60000; i++) {
         int x = rand() % 10000;
