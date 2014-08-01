@@ -12,6 +12,14 @@ void test_match(char* T, int n, char* P, int m, int correct_matches, int* correc
     if (matches > 0) free(output);
 }
 
+void stream_test(char* T, int n, char* P, int m, int* correct) {
+    mmatch_state state = mmatch_build(P, m);
+    int j;
+    for (j = 0; j < n; j++) {
+        assert(correct[j] == mmatch_stream(state, T[j]));
+    }
+}
+
 int main(void) {
     int n;
     int m = 10;
@@ -62,6 +70,25 @@ int main(void) {
     correct_matches = 0;
     correct = realloc(correct, correct_matches * sizeof(int));
     test_match("ababababababababab", n, "ababb", m, correct_matches, correct);
+
+    correct = realloc(correct, 15 * sizeof(int));
+    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = 4;
+    correct[5]  = -1; correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1;
+    correct[10] = -1; correct[11] = -1; correct[12] = -1; correct[13] = -1; correct[14] = 14;
+    stream_test("ababbaaaaababaa", 15, "ababb", 5, correct);
+    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = 4;
+    correct[5]  = -1; correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1;
+    correct[10] = -1; correct[11] = -1; correct[12] = -1; correct[13] = -1; correct[14] = 14;
+    stream_test("cdcddcccccdcdcc", 15, "ababb", 5, correct);
+    correct = realloc(correct, 18 * sizeof(int));
+    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = -1; correct[5]  = 5;
+    correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1; correct[10] = -1; correct[11] = -1;
+    correct[12] = 12; correct[13] = -1; correct[14] = -1; correct[15] = -1; correct[16] = -1; correct[17] = 17;
+    stream_test("ababaabbababbababb", 18, "ababb", 5, correct);
+    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = -1; correct[5]  = -1;
+    correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1; correct[10] = -1; correct[11] = -1;
+    correct[12] = -1; correct[13] = -1; correct[14] = -1; correct[15] = -1; correct[16] = -1; correct[17] = -1;
+    stream_test("ababababababababab", 18, "ababb", 5, correct);
 
     free(A);
 

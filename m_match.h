@@ -130,4 +130,73 @@ int mmatch_match(char* T, int n, char* P, int m, int* output) {
     return matches;
 }
 
+/*
+    typedef struct mmatch_state_t *mmatch_state
+    Structure to hold current state of algorithm.
+    Components:
+        int*   A       - Predecessor table for pattern
+        int    m       - Length of pattern
+        int    i       - Current index of pattern
+        int    j       - Current index of text
+        int*   failure - Failure table for pattern
+        rbtree text    - Predecessor tree for text
+*/
+typedef struct mmatch_state_t {
+    int* A;
+    int m;
+    int i;
+    int j;
+    int* failure;
+    rbtree text;
+} *mmatch_state;
+
+/*
+    mmatch_state mmatch_build(char* P, int m)
+    Creates an initial state for m-match algorithm.
+    Parameters:
+        char* P - Pattern
+        int   m - Length of pattern
+    Returns mmatch_state:
+        Initial state for algorithm
+*/
+mmatch_state mmatch_build(char* P, int m) {
+    mmatch_state state = malloc(sizeof(struct mmatch_state_t));
+    state->A = malloc(m * sizeof(int));
+    construct_table(P, m, state->A);
+    state->failure = malloc(m * sizeof(int));
+    mmatch_failure(m, state->failure, state->A);
+    state->text = rbtree_create();
+    state->m = m;
+    state->i = 0;
+    state->j = 0;
+    return state;
+}
+
+/*
+    int mmatch_stream(mmatch_state state, char T_j)
+    Returns whether an m-match occurs for character T_j.
+    Parameters:
+        mmatch_state state - The current state of the algorithm
+        char         T_j   - The next character in the text
+    Returns int:
+        j  if P m-matches T[j - m + 1:j]
+        -1 otherwise
+*/
+int mmatch_stream(mmatch_state state, char T_j) {
+    int* A = state->A;
+    int* failure = state->failure;
+    int i = state->i, j = state->j, result = -1;
+    rbtree text = state->text;
+    while (i > 0 && !compare_pi_tj(i, T_j, text, j, A)) i = failure[i - 1];
+    if (compare_pi_tj(i, T_j, text, j, A)) i++;
+    if (i == state->m) {
+        result = j;
+        i = failure[i - 1];
+    }
+    rbtree_insert(text, (void*)T_j, (void*)j, compare_char);
+    state->i = i;
+    state->j++;
+    return result;
+}
+
 #endif
