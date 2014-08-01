@@ -67,4 +67,68 @@ int kmp_match(char* T, int n, char* P, int m, int* output) {
     return matches;
 }
 
+/*
+    typedef struct kmp_state_t *kmp_state
+    Structure to hold internal state of KMP algorithm during stream.
+    Components:
+        char* P       - Pattern
+        int   m       - Length of pattern
+        int   i       - Current index of pattern
+        int   j       - Current index of text
+        int*  failure - Failure table for pattern
+*/
+typedef struct kmp_state_t {
+    char* P;
+    int m;
+    int i;
+    int j;
+    int* failure;
+} *kmp_state;
+
+/*
+    kmp_state kmp_build(char* P, int m)
+    Creates an initial KMP state for the pattern
+    Parameters:
+        char* P - Pattern
+        int   m - Length of pattern
+    Returns kmp_state:
+        An initial KMP state for the pattern, where i = j = 0
+*/
+kmp_state kmp_build(char* P, int m) {
+    kmp_state state = malloc(sizeof(struct kmp_state_t));
+    state->P = P;
+    state->m = m;
+    state->i = 0;
+    state->j = 0;
+    state->failure = malloc(m * sizeof(int));
+    kmp_failure(P, m, state->failure);
+    return state;
+}
+
+/*
+    int kmp_stream(kmp_state state, char T_j)
+    Returns whether a match occurs for character T_j.
+    Parameters:
+        kmp_state state - The current state of the algorithm
+        char      T_j   - The next character in the text
+    Returns int:
+        j  if P == T[j - m + 1:j]
+        -1 otherwise
+        state parameter is modified by reference
+*/
+int kmp_stream(kmp_state state, char T_j) {
+    char* P = state->P;
+    int i = state->i, j = state->j, result = -1;
+    int* failure = state->failure;
+    while (i > 0 && P[i] != T_j) i = failure[i - 1];
+    if (P[i] == T_j) i++;
+    if (i == state->m) {
+        result = j;
+        i = failure[i - 1];
+    }
+    state->i = i;
+    state->j++;
+    return result;
+}
+
 #endif
