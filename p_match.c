@@ -18,13 +18,16 @@ void test_match(char* T, int n, char* P, int m, char* sigma, int s_sigma, char* 
     if (matches > 0) free(output);
 }
 
-int main(void) {
-    int n = 10, m = 3;
-    char* preprocessed = malloc(n * sizeof(char));
-    preprocess("abcabcdeab", n, "abc", m, preprocessed);
-    assert(compare_string(preprocessed, "abcabcddab", 10));
+void stream_test(char* T, int n, char* P, int m, char* sigma, int s_sigma, char* pi, int s_pi, int* correct) {
+    pmatch_state state = pmatch_build(P, m, sigma, s_sigma, pi, s_pi);
+    int j;
+    for (j = 0; j < n; j++) {
+        assert(correct[j] == pmatch_stream(state, T[j]));
+    }
+}
 
-    n = 18; m = 5;
+int main(void) {
+    int n = 18, m = 5;
     int correct_matches = 1;
     int* correct = malloc(correct_matches * sizeof(int));
     correct[0] = 8;
@@ -40,6 +43,22 @@ int main(void) {
     correct_matches = 0;
     correct = realloc(correct, correct_matches * sizeof(int));
     test_match("ababaabbababdababd", n, "ababc", m, "cd", 2, "ab", 2, correct_matches, correct);
+
+    correct = realloc(correct, 18 * sizeof(int));
+    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = -1; correct[5]  = -1;
+    correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1; correct[10] = -1; correct[11] = -1;
+    correct[12] = 12; correct[13] = -1; correct[14] = -1; correct[15] = -1; correct[16] = -1; correct[17] = -1;
+    stream_test("ababaabbababcababd", 18, "ababc", 5, "cd", 2, "ab", 2, correct);
+
+    correct = realloc(correct, 5 * sizeof(int));
+    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = 4;
+    stream_test("ababc", 5, "ababc", 5, "cd", 2, "ab", 2, correct);
+
+    correct = realloc(correct, 18 * sizeof(int));
+    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = -1; correct[5]  = -1;
+    correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1; correct[10] = -1; correct[11] = -1;
+    correct[12] = -1; correct[13] = -1; correct[14] = -1; correct[15] = -1; correct[16] = -1; correct[17] = -1;
+    stream_test("ababaabbababdababd", 18, "ababc", 5, "cd", 2, "ab", 2, correct);
 
     printf("All tests succeeded!\n");
     return 0;
