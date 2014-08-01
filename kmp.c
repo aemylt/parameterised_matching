@@ -8,7 +8,7 @@ void stream_test(char* T, int n, char* P, int m, int* correct) {
     kmp_state state = kmp_build(P, m);
     int j;
     for (j = 0; j < n; j++) {
-        assert(correct[j] == kmp_stream(state, T[j]));
+        assert(correct[j] == kmp_stream(state, T[j], j));
     }
 }
 

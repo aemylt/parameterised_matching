@@ -16,7 +16,7 @@ void stream_test(char* T, int n, char* P, int m, int* correct) {
     mmatch_state state = mmatch_build(P, m);
     int j;
     for (j = 0; j < n; j++) {
-        assert(correct[j] == mmatch_stream(state, T[j]));
+        assert(correct[j] == mmatch_stream(state, T[j], j));
     }
 }
 
