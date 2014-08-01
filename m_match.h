@@ -50,9 +50,7 @@ void construct_table(char* p, int m, int* A) {
 */
 int compare_pi_tj(int i, char t_j, rbtree text, int j, int* A) {
     int lookup = (int)rbtree_lookup(text, (void*)t_j, (void*)j - i - 1, compare_char);
-    if ((A[i] != i) && (lookup == j - i + A[i])) return 1;
-    if ((A[i] == i) && (lookup < j - i)) return 1;
-    return 0;
+    return ((i - A[i] == j - lookup) || ((A[i] == i) && (j - lookup > i)));
 }
 
 /*
@@ -68,9 +66,7 @@ int compare_pi_tj(int i, char t_j, rbtree text, int j, int* A) {
         0 otherwise
 */
 int compare_pi_pj(int i, char* p, int j, int* A) {
-    if ((j - A[j] < i - 1) && (A[i] == i)) return 1;
-    if ((j - A[j] >= i - 1) && (p[j] == p[j - i + A[i]])) return 1;
-    return 0;
+    return ((i - A[i] == j - A[j]) || ((A[i] == i) && (j - A[j] > i)));
 }
 
 /*
