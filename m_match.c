@@ -29,17 +29,16 @@ int main(void) {
     rbtree_delete(test, (void*)'a', compare_char);
     assert(compare_pi_tj(0, 'a', test, 0, A));
     assert(compare_pi_tj(0, 'b', test, 5, A));
-    assert(!compare_pi_pj(4, p, 5, A));
-    assert(compare_pi_pj(5, p, 5, A));
-    assert(compare_pi_pj(0, p, 0, A));
-    assert(compare_pi_pj(4, p, 4, A));
-    assert(compare_pi_pj(0, p, 5, A));
+    assert(!compare_pi_pj(4, 5, A));
+    assert(compare_pi_pj(5, 5, A));
+    assert(compare_pi_pj(0, 0, A));
+    assert(compare_pi_pj(4, 4, A));
+    assert(compare_pi_pj(0, 5, A));
 
     m = 3;
-    p = "aba";
     A = realloc(A, m * sizeof(int));
-    construct_table(p, m, A);
-    assert(compare_pi_pj(1, p, 2, A));
+    construct_table("aba", m, A);
+    assert(compare_pi_pj(1, 2, A));
 
     n = 15; m = 5;
     int correct_matches = 2;

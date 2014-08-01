@@ -49,7 +49,7 @@ void construct_table(char* p, int m, int* A) {
         0 otherwise
 */
 int compare_pi_tj(int i, char t_j, rbtree text, int j, int* A) {
-    int lookup = (int)rbtree_lookup(text, (void*)t_j, (void*)j - i - 1, compare_char);
+    int lookup = (int)rbtree_lookup(text, (void*)t_j, (void*)j, compare_char);
     return ((i - A[i] == j - lookup) || ((A[i] == i) && (j - lookup > i)));
 }
 
@@ -58,14 +58,13 @@ int compare_pi_tj(int i, char t_j, rbtree text, int j, int* A) {
     Implements the Compare(p_i, p_j) function by Amir et al.
     Parameters:
         int   i - Index i of pattern
-        char* p - Pattern
         int   j - Index j of pattern
         int*  A - Predecessor table
     Returns int:
         1 if p_i \cong p_j
         0 otherwise
 */
-int compare_pi_pj(int i, char* p, int j, int* A) {
+int compare_pi_pj(int i, int j, int* A) {
     return ((i - A[i] == j - A[j]) || ((A[i] == i) && (j - A[j] > i)));
 }
 
@@ -73,7 +72,6 @@ int compare_pi_pj(int i, char* p, int j, int* A) {
     void mmatch_failure(char* P, int m, int* failure, int* A)
     Constructs the failure table for pattern P.
     Parameters:
-        char* P       - Pattern
         int   m       - Length of pattern
         int*  failure - Variable for failure table to be returned in
         int*  A       - Predecessor table
@@ -81,14 +79,14 @@ int compare_pi_pj(int i, char* p, int j, int* A) {
         Value returned in failure parameter
         failure[i] = longest prefix of P[0:i] that is also a suffix of P[0:i]
     Notes:
-        |P| == |A| == |failure| == m
+        |A| == |failure| == m
 */
-void mmatch_failure(char* P, int m, int* failure, int* A) {
+void mmatch_failure(int m, int* failure, int* A) {
     int i = 0, j;
     failure[0] = 0;
     for (j = 1; j < m - 1; j++) {
-        while (i > 0 && !compare_pi_pj(i, P, j, A)) i = failure[i - 1];
-        if (compare_pi_pj(i, P, j, A)) i++;
+        while (i > 0 && !compare_pi_pj(i, j, A)) i = failure[i - 1];
+        if (compare_pi_pj(i, j, A)) i++;
         failure[j] = i;
     }
 }
@@ -114,7 +112,7 @@ int mmatch_match(char* T, int n, char* P, int m, int* output) {
     int* A = malloc(m * sizeof(int));
     construct_table(P, m, A);
     int* failure = malloc(m * sizeof(int));
-    mmatch_failure(P, m, failure, A);
+    mmatch_failure(m, failure, A);
     rbtree text = rbtree_create();
     int i = 0, j, matches = 0;
     for (j = 0; j < n; j++) {
