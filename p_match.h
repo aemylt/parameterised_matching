@@ -4,6 +4,9 @@
     More information is available here: http://www.cs.rutgers.edu/~farach/pubs/ParametrizedMatching.pdf
 */
 
+#ifndef P_MATCH
+#define P_MATCH
+
 #include "trees/red_black_tree/red_black_tree/rbtree.c"
 #include "shared_funcs.h"
 #include "kmp.h"
@@ -100,3 +103,5 @@ int p_match(char* T, int n, char* P, int m, char* sigma, int s_sigma, char* pi, 
     free(variable_match);
     return matches;
 }
+
+#endif
