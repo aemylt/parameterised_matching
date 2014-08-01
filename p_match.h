@@ -62,7 +62,7 @@ void preprocess(char* T, int n, char* sigma, int s_sigma, char* T_p) {
         |T|      == n
         |P|      == m
         |sigma|  == s_sigma
-        |pi|     == pi
+        |pi|     == s_pi
         |output| == n - m + 1 (maximum number of p-matches)
 */
 int p_match(char* T, int n, char* P, int m, char* sigma, int s_sigma, char* pi, int s_pi, int* output) {
