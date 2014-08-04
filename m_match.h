@@ -24,14 +24,14 @@
     Notes:
         |p| == |A| == m
 */
-void construct_table(char* p, int m, int* A) {
+void construct_table(char* P, int m, int* A) {
     int i;
     rbtree symbols = rbtree_create();
     A[0] = 0;
-    rbtree_insert(symbols, (void*)p[0], (void*)0, compare_char);
+    rbtree_insert(symbols, (void*)P[0], (void*)0, compare_char);
     for (i = 1; i < m; i++) {
-        A[i] = (int)rbtree_lookup(symbols, (void*)p[i], (void*)i, compare_char);
-        rbtree_insert(symbols, (void*)p[i], (void*)i, compare_char);
+        A[i] = (int)rbtree_lookup(symbols, (void*)P[i], (void*)i, compare_char);
+        rbtree_insert(symbols, (void*)P[i], (void*)i, compare_char);
     }
 }
 
