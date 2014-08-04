@@ -2,7 +2,7 @@
     m_match.h
     Implementation of the mapped matching algorithm by Amir, Farach and Muthukrishnan.
     More information is available here: http://www.cs.rutgers.edu/~farach/pubs/ParametrizedMatching.pdf
-    This variant of the KMP algorithm is from lecture slides courtesy of Dr Raphael Clifford: (private link) https://www.cs.bris.ac.uk/Teaching/Resources/COMS21103/material-dima/string_matching.pdf
+    This variant of the KMP algorithm is from lecture slides courtesy of Dr. Raphaël Clifford: (private link) https://www.cs.bris.ac.uk/Teaching/Resources/COMS21103/material-dima/string_matching.pdf
 */
 
 #ifndef M_MATCH
