@@ -1,5 +1,5 @@
 #include "kmp.h"
-#include "shared_funcs.h"
+#include "test_funcs.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>

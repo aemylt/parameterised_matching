@@ -4,6 +4,7 @@
 #include "m_match.h"
 #include "trees/red_black_tree/red_black_tree/rbtree.c"
 #include "shared_funcs.h"
+#include "test_funcs.h"
 
 void test_match(char* T, int n, char* P, int m, int correct_matches, int* correct) {
     int* output = malloc((n - m + 1) * sizeof(int));

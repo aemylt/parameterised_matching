@@ -2,14 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "p_match.h"
-
-int compare_string(char* A, char* B, int m) {
-    int i;
-    for (i = 0; i < m; i++) {
-        if (A[i] != B[i]) return 0;
-    }
-    return 1;
-}
+#include "test_funcs.h"
 
 void test_match(char* T, int n, char* P, int m, char* sigma, int s_sigma, char* pi, int s_pi, int correct_matches, int* correct) {
     int* output = malloc((n - m + 1) * sizeof(int));
