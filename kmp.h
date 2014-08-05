@@ -8,7 +8,6 @@
 #ifndef KMP
 #define KMP
 #include <stdlib.h>
-#include <stdio.h>
 
 /*
     void kmp_failure(char* P, int m, int* failure)

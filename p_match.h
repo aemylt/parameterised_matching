@@ -11,7 +11,6 @@
 #include "shared_funcs.h"
 #include "kmp.h"
 #include "m_match.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 /*
