@@ -26,7 +26,7 @@
 void kmp_failure(char* P, int m, int* failure) {
     int i = 0, j;
     failure[0] = 0;
-    for (j = 1; j < m - 1; j++) {
+    for (j = 1; j < m; j++) {
         while (i > 0 && P[i] != P[j]) i = failure[i];
         if (P[i] == P[j]) i++;
         failure[j] = (i) ? i - 1 : 0;
@@ -59,7 +59,7 @@ int kmp_match(char* T, int n, char* P, int m, int* output) {
         if (P[i] == T[j]) i++;
         if (i == m) {
             output[matches++] = j - m + 1;
-            i = failure[i];
+            i = failure[i - 1];
         }
     }
     output = realloc(output, matches * sizeof(int));
@@ -122,7 +122,7 @@ int kmp_stream(kmp_state state, char T_j, int j) {
     if (P[i] == T_j) i++;
     if (i == state->m) {
         result = j;
-        i = failure[i];
+        i = failure[i - 1];
     }
     state->i = i;
     return result;
