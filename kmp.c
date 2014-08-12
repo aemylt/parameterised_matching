@@ -25,6 +25,13 @@ int main(void) {
     correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1; correct[10] = -1; correct[11] = -1;
     correct[12] = 12; correct[13] = -1; correct[14] = -1; correct[15] = -1; correct[16] = -1; correct[17] = 17;
     stream_test("ababaabbababbababb", n, "ababb", m, correct);
+    output = realloc(output, 81 * sizeof(int));
+    matches = kmp_match("aaaaabbbbbcccccaaaaaaaaaabbbbbcccccdddddaaaaabbbbbcccccaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbcccccaaaaa", 100, "aaaaabbbbbcccccaaaaa", 20, output);
+    int i;
+    for (i = 0; i < matches - 1; i++) {
+        printf("%d, ", output[i]);
+    }
+    printf("%d\n", output[matches - 1]);
     free(correct);
     free(output);
     printf("All tests succeeded!\n");
