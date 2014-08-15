@@ -23,12 +23,12 @@
         |P| == |failure| == m
 */
 void kmp_failure(char* P, int m, int* failure) {
-    int i = 0, j;
-    failure[0] = 0;
+    int i = -1, j;
+    failure[0] = -1;
     for (j = 1; j < m; j++) {
-        while (i > 0 && P[i] != P[j]) i = failure[i];
-        if (P[i] == P[j]) i++;
-        failure[j] = (i) ? i - 1 : 0;
+        while (i > -1 && P[i + 1] != P[j]) i = failure[i];
+        if (P[i + 1] == P[j]) i++;
+        failure[j] = i;
     }
 }
 
@@ -52,13 +52,13 @@ void kmp_failure(char* P, int m, int* failure) {
 int kmp_match(char* T, int n, char* P, int m, int* output) {
     int* failure = malloc(m * sizeof(int));
     kmp_failure(P, m, failure);
-    int i = 0, j, matches = 0;
+    int i = -1, j, matches = 0;
     for (j = 0; j < n; j++) {
-        while (i > 0 && P[i] != T[j]) i = failure[i];
-        if (P[i] == T[j]) i++;
-        if (i == m) {
+        while (i > -1 && P[i + 1] != T[j]) i = failure[i];
+        if (P[i + 1] == T[j]) i++;
+        if (i == m - 1) {
             output[matches++] = j - m + 1;
-            i = failure[i - 1];
+            i = failure[i];
         }
     }
     output = realloc(output, matches * sizeof(int));
@@ -95,7 +95,7 @@ kmp_state kmp_build(char* P, int m) {
     kmp_state state = malloc(sizeof(struct kmp_state_t));
     state->P = P;
     state->m = m;
-    state->i = 0;
+    state->i = -1;
     state->failure = malloc(m * sizeof(int));
     kmp_failure(P, m, state->failure);
     return state;
@@ -117,11 +117,11 @@ int kmp_stream(kmp_state state, char T_j, int j) {
     char* P = state->P;
     int i = state->i, result = -1;
     int* failure = state->failure;
-    while (i > 0 && P[i] != T_j) i = failure[i];
-    if (P[i] == T_j) i++;
-    if (i == state->m) {
+    while (i > -1 && P[i + 1] != T_j) i = failure[i];
+    if (P[i + 1] == T_j) i++;
+    if (i == state->m - 1) {
         result = j;
-        i = failure[i - 1];
+        i = failure[i];
     }
     state->i = i;
     return result;

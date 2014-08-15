@@ -82,11 +82,11 @@ int compare_pi_pj(int i, int j, int* A) {
         |A| == |failure| == m
 */
 void mmatch_failure(int m, int* failure, int* A) {
-    int i = 0, j;
-    failure[0] = 0;
+    int i = -1, j;
+    failure[0] = -1;
     for (j = 1; j < m - 1; j++) {
-        while (i > 0 && !compare_pi_pj(i, j, A)) i = failure[i - 1];
-        if (compare_pi_pj(i, j, A)) i++;
+        while (i > -1 && !compare_pi_pj(i + 1, j, A)) i = failure[i];
+        if (compare_pi_pj(i + 1, j, A)) i++;
         failure[j] = i;
     }
 }
@@ -114,13 +114,13 @@ int mmatch_match(char* T, int n, char* P, int m, int* output) {
     int* failure = malloc(m * sizeof(int));
     mmatch_failure(m, failure, A);
     rbtree text = rbtree_create();
-    int i = 0, j, matches = 0;
+    int i = -1, j, matches = 0;
     for (j = 0; j < n; j++) {
-        while (i > 0 && !compare_pi_tj(i, T[j], text, j, A)) i = failure[i - 1];
-        if (compare_pi_tj(i, T[j], text, j, A)) i++;
-        if (i == m) {
+        while (i > -1 && !compare_pi_tj(i + 1, T[j], text, j, A)) i = failure[i];
+        if (compare_pi_tj(i + 1, T[j], text, j, A)) i++;
+        if (i == m - 1) {
             output[matches++] = j - m + 1;
-            i = failure[i - 1];
+            i = failure[i];
         }
         rbtree_insert(text, (void*)T[j], (void*)j, compare_char);
     }
@@ -165,7 +165,7 @@ mmatch_state mmatch_build(char* P, int m) {
     mmatch_failure(m, state->failure, state->A);
     state->text = rbtree_create();
     state->m = m;
-    state->i = 0;
+    state->i = -1;
     return state;
 }
 
@@ -185,11 +185,11 @@ int mmatch_stream(mmatch_state state, char T_j, int j) {
     int* failure = state->failure;
     int i = state->i, result = -1;
     rbtree text = state->text;
-    while (i > 0 && !compare_pi_tj(i, T_j, text, j, A)) i = failure[i - 1];
-    if (compare_pi_tj(i, T_j, text, j, A)) i++;
-    if (i == state->m) {
+    while (i > -1 && !compare_pi_tj(i + 1, T_j, text, j, A)) i = failure[i];
+    if (compare_pi_tj(i + 1, T_j, text, j, A)) i++;
+    if (i == state->m - 1) {
         result = j;
-        i = failure[i - 1];
+        i = failure[i];
     }
     rbtree_insert(text, (void*)T_j, (void*)j, compare_char);
     state->i = i;
