@@ -84,7 +84,7 @@ int compare_pi_pj(int i, int j, int* A) {
 void mmatch_failure(int m, int* failure, int* A) {
     int i = -1, j;
     failure[0] = -1;
-    for (j = 1; j < m - 1; j++) {
+    for (j = 1; j < m; j++) {
         while (i > -1 && !compare_pi_pj(i + 1, j, A)) i = failure[i];
         if (compare_pi_pj(i + 1, j, A)) i++;
         failure[j] = i;
