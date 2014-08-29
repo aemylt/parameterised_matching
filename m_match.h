@@ -124,7 +124,6 @@ int mmatch_match(char* T, int n, char* P, int m, int* output) {
         }
         rbtree_insert(text, (void*)T[j], (void*)j, compare_char);
     }
-    output = realloc(output, matches * sizeof(int));
     free(A);
     free(failure);
     return matches;
@@ -194,6 +193,18 @@ int mmatch_stream(mmatch_state state, char T_j, int j) {
     rbtree_insert(text, (void*)T_j, (void*)j, compare_char);
     state->i = i;
     return result;
+}
+
+/*
+    void mmatch_free(mmatch_state state)
+    Frees a mmatch_state from memory.
+    Parameters:
+        mmatch_state state - The state to free.
+*/
+void mmatch_free(mmatch_state state) {
+    free(state->A);
+    free(state->failure);
+    free(state);
 }
 
 #endif

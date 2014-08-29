@@ -10,6 +10,7 @@ void stream_test(char* T, int n, char* P, int m, int* correct) {
     for (j = 0; j < n; j++) {
         assert(correct[j] == kmp_stream(state, T[j], j));
     }
+    kmp_free(state);
 }
 
 int main(void) {
@@ -17,7 +18,7 @@ int main(void) {
     int correct_matches = 2;
     int* correct = malloc(correct_matches * sizeof(int));
     correct[0] = 8; correct[1] = 13;
-    int* output = malloc((n - m + 1) * sizeof(int));
+    int* output = malloc(100 * sizeof(int));
     int matches = kmp_match("ababaabbababbababb", n, "ababb", m, output);
     assert(correct_matches == matches && compare(output, correct, matches));
     correct = realloc(correct, n * sizeof(int));
@@ -25,7 +26,6 @@ int main(void) {
     correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1; correct[10] = -1; correct[11] = -1;
     correct[12] = 12; correct[13] = -1; correct[14] = -1; correct[15] = -1; correct[16] = -1; correct[17] = 17;
     stream_test("ababaabbababbababb", n, "ababb", m, correct);
-    output = realloc(output, 81 * sizeof(int));
     matches = kmp_match("aaaaabbbbbcccccaaaaaaaaaabbbbbcccccdddddaaaaabbbbbcccccaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbcccccaaaaa", 100, "aaaaabbbbbcccccaaaaa", 20, output);
     int i;
     for (i = 0; i < matches - 1; i++) {

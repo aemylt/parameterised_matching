@@ -8,7 +8,7 @@ void test_match(char* T, int n, char* P, int m, char* sigma, int s_sigma, char* 
     int* output = malloc((n - m + 1) * sizeof(int));
     int matches = p_match(T, n, P, m, sigma, s_sigma, pi, s_pi, output);
     assert(correct_matches == matches && compare(output, correct, matches));
-    if (matches > 0) free(output);
+    free(output);
 }
 
 void stream_test(char* T, int n, char* P, int m, char* sigma, int s_sigma, char* pi, int s_pi, int* correct) {
@@ -17,6 +17,7 @@ void stream_test(char* T, int n, char* P, int m, char* sigma, int s_sigma, char*
     for (j = 0; j < n; j++) {
         assert(correct[j] == pmatch_stream(state, T[j]));
     }
+    pmatch_free(state);
 }
 
 int main(void) {

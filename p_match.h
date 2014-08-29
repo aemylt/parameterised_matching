@@ -109,7 +109,6 @@ int p_match(char* T, int n, char* P, int m, char* sigma, int s_sigma, char* pi, 
         } else if (static_match[i] > variable_match[j]) i++;
         else j++;
     }
-    output = realloc(output, matches * sizeof(int));
     free(T_p);
     free(T_pp);
     free(P_p);
@@ -170,6 +169,8 @@ pmatch_state pmatch_build(char* P, int m, char* sigma, int s_sigma, char* pi, in
     process_string(P, m, s_tree, a, p_tree, b, P_p, P_pp);
     state->kmp = kmp_build(P_p, m);
     state->mmatch = mmatch_build(P_pp, m);
+    free(P_p);
+    free(P_pp);
     return state;
 }
 
@@ -190,6 +191,18 @@ int pmatch_stream(pmatch_state state, char T_j) {
     if ((kmp_result == j) && (mmatch_result == j)) result = j;
     state->j++;
     return result;
+}
+
+/*
+    void pmatch_free(pmatch_state state)
+    Frees a pmatch_state from memory.
+    Parameters:
+        pmatch_state state - The state to free.
+*/
+void pmatch_free(pmatch_state state) {
+    kmp_free(state->kmp);
+    mmatch_free(state->mmatch);
+    free(state);
 }
 
 #endif

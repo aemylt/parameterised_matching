@@ -61,7 +61,6 @@ int kmp_match(char* T, int n, char* P, int m, int* output) {
             i = failure[i];
         }
     }
-    output = realloc(output, matches * sizeof(int));
     free(failure);
     return matches;
 }
@@ -92,8 +91,10 @@ typedef struct kmp_state_t {
         An initial KMP state for the pattern, where i = j = 0
 */
 kmp_state kmp_build(char* P, int m) {
+    int i;
     kmp_state state = malloc(sizeof(struct kmp_state_t));
-    state->P = P;
+    state->P = malloc(m * sizeof(char));
+    for (i = 0; i < m; i++) state->P[i] = P[i];
     state->m = m;
     state->i = -1;
     state->failure = malloc(m * sizeof(int));
@@ -125,6 +126,18 @@ int kmp_stream(kmp_state state, char T_j, int j) {
     }
     state->i = i;
     return result;
+}
+
+/*
+    void kmp_free(kmp_state state)
+    Frees a kmp_state from memory.
+    Parameters:
+        kmp_state state - The state to free.
+*/
+void kmp_free(kmp_state state) {
+    free(state->failure);
+    free(state->P);
+    free(state);
 }
 
 #endif
