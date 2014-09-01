@@ -92,6 +92,8 @@ int p_match(char* T, int n, char* P, int m, char* sigma, int s_sigma, char* pi, 
     char b = build_tree(pi, s_pi, &p_tree);
     process_string(T, n, s_tree, a, p_tree, b, T_p, T_pp);
     process_string(P, m, s_tree, a, p_tree, b, P_p, P_pp);
+    rbtree_destroy(s_tree);
+    rbtree_destroy(p_tree);
 
     int* static_match = malloc((n - m + 1) * sizeof(int));
     int* variable_match = malloc((n - m + 1) * sizeof(int));
@@ -202,6 +204,8 @@ int pmatch_stream(pmatch_state state, char T_j) {
 void pmatch_free(pmatch_state state) {
     kmp_free(state->kmp);
     mmatch_free(state->mmatch);
+    rbtree_destroy(state->sigma);
+    rbtree_destroy(state->pi);
     free(state);
 }
 

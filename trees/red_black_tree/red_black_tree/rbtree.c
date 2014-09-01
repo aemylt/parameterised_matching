@@ -380,4 +380,15 @@ void delete_case6(rbtree t, node n) {
     }
 }
 
+void destroy_nodes(rbtree_node n) {
+    if (n->left != NULL) destroy_nodes(n->left);
+    if (n->right != NULL) destroy_nodes(n->right);
+    free(n);
+}
+
+void rbtree_destroy(rbtree t) {
+    if (t->root != NULL) destroy_nodes(t->root);
+    free(t);
+}
+
 #endif

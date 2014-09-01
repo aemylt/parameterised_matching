@@ -33,6 +33,7 @@ void construct_table(char* P, int m, int* A) {
         A[i] = (int)rbtree_lookup(symbols, (void*)P[i], (void*)i, compare_char);
         rbtree_insert(symbols, (void*)P[i], (void*)i, compare_char);
     }
+    rbtree_destroy(symbols);
 }
 
 /*
@@ -126,6 +127,7 @@ int mmatch_match(char* T, int n, char* P, int m, int* output) {
     }
     free(A);
     free(failure);
+    rbtree_destroy(text);
     return matches;
 }
 
@@ -204,6 +206,7 @@ int mmatch_stream(mmatch_state state, char T_j, int j) {
 void mmatch_free(mmatch_state state) {
     free(state->A);
     free(state->failure);
+    rbtree_destroy(state->text);
     free(state);
 }
 

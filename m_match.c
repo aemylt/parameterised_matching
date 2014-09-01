@@ -44,6 +44,7 @@ int main(void) {
     assert(compare_pi_pj(0, 0, A));
     assert(compare_pi_pj(4, 4, A));
     assert(compare_pi_pj(0, 5, A));
+    rbtree_destroy(test);
 
     m = 3;
     A = realloc(A, m * sizeof(int));
