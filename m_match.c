@@ -13,25 +13,24 @@ void test_match(char* T, int n, char* P, int m, int correct_matches, int* correc
     free(output);
 }
 
-void stream_test(char* T, int n, char* P, int m, int* correct) {
+void stream_test(char* T, int n, char* P, int m, int* correct, int num_correct) {
     mmatch_state state = mmatch_build(P, m);
-    int j;
+    int j, counter = 0;
     for (j = 0; j < n; j++) {
-        assert(correct[j] == mmatch_stream(state, T[j], j));
+        if ((counter < num_correct) && (j == correct[counter] + m - 1)) assert(mmatch_stream(state, T[j], j) == correct[counter++] + m - 1);
+        else assert(mmatch_stream(state, T[j], j) == -1);
     }
     mmatch_free(state);
 }
 
 int main(void) {
-    int n;
-    int m = 10;
     char* p = "aaaaabbbbb";
-    int* A = (int*)malloc(m * sizeof(int));
-    int* correct = (int*)malloc(m * sizeof(int));
+    int* A = (int*)malloc(10 * sizeof(int));
+    int* correct = (int*)malloc(100 * sizeof(int));
     correct[0] = 0; correct[1] = 0; correct[2] = 1; correct[3] = 2; correct[4] = 3;
     correct[5] = 5; correct[6] = 5; correct[7] = 6; correct[8] = 7; correct[9] = 8;
-    construct_table(p, m, A);
-    assert(compare(A, correct, m));
+    construct_table(p, 10, A);
+    assert(compare(A, correct, 10));
     rbtree test = rbtree_create();
     rbtree_insert(test, (void*)'a', (void*)3, compare_char);
     assert(!compare_pi_tj(4, 'b', test, 5, A));
@@ -46,54 +45,54 @@ int main(void) {
     assert(compare_pi_pj(0, 5, A));
     rbtree_destroy(test);
 
-    m = 3;
-    A = realloc(A, m * sizeof(int));
-    construct_table("aba", m, A);
+    A = realloc(A, 3 * sizeof(int));
+    construct_table("aba", 3, A);
     assert(compare_pi_pj(1, 2, A));
-
-    n = 15; m = 5;
-    int correct_matches = 2;
-    correct = realloc(correct, correct_matches * sizeof(int));
-    correct[0] = 0; correct[1] = 10;
-    test_match("ababbaaaaababaa", n, "ababb", m, correct_matches, correct);
-
-    n = 15; m = 5;
-    correct_matches = 2;
-    correct = realloc(correct, correct_matches * sizeof(int));
-    correct[0] = 0; correct[1] = 10;
-    test_match("cdcddcccccdcdcc", n, "ababb", m, correct_matches, correct);
-
-    n = 18; m = 5;
-    correct_matches = 3;
-    correct = realloc(correct, correct_matches * sizeof(int));
-    correct[0] = 1; correct[1] = 8; correct[2] = 13;
-    test_match("ababaabbababbababb", n, "ababb", m, correct_matches, correct);
-
-    n = 18; m = 5;
-    correct_matches = 0;
-    correct = realloc(correct, correct_matches * sizeof(int));
-    test_match("ababababababababab", n, "ababb", m, correct_matches, correct);
-
-    correct = realloc(correct, 15 * sizeof(int));
-    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = 4;
-    correct[5]  = -1; correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1;
-    correct[10] = -1; correct[11] = -1; correct[12] = -1; correct[13] = -1; correct[14] = 14;
-    stream_test("ababbaaaaababaa", 15, "ababb", 5, correct);
-    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = 4;
-    correct[5]  = -1; correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1;
-    correct[10] = -1; correct[11] = -1; correct[12] = -1; correct[13] = -1; correct[14] = 14;
-    stream_test("cdcddcccccdcdcc", 15, "ababb", 5, correct);
-    correct = realloc(correct, 18 * sizeof(int));
-    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = -1; correct[5]  = 5;
-    correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1; correct[10] = -1; correct[11] = -1;
-    correct[12] = 12; correct[13] = -1; correct[14] = -1; correct[15] = -1; correct[16] = -1; correct[17] = 17;
-    stream_test("ababaabbababbababb", 18, "ababb", 5, correct);
-    correct[0]  = -1; correct[1]  = -1; correct[2]  = -1; correct[3]  = -1; correct[4]  = -1; correct[5]  = -1;
-    correct[6]  = -1; correct[7]  = -1; correct[8]  = -1; correct[9]  = -1; correct[10] = -1; correct[11] = -1;
-    correct[12] = -1; correct[13] = -1; correct[14] = -1; correct[15] = -1; correct[16] = -1; correct[17] = -1;
-    stream_test("ababababababababab", 18, "ababb", 5, correct);
-
     free(A);
+
+    correct[0] = 0; correct[1] = 10;
+    test_match("ababbaaaaababaa", 15, "ababb", 5, 2, correct);
+    stream_test("ababbaaaaababaa", 15, "ababb", 5, correct, 2);
+
+    correct[0] = 0; correct[1] = 10;
+    test_match("cdcddcccccdcdcc", 15, "ababb", 5, 2, correct);
+    stream_test("cdcddcccccdcdcc", 15, "ababb", 5, correct, 2);
+
+    correct[0] = 1; correct[1] = 8; correct[2] = 13;
+    test_match("ababaabbababbababb", 18, "ababb", 5, 3, correct);
+    stream_test("ababaabbababbababb", 18, "ababb", 5, correct, 3);
+
+    test_match("ababababababababab", 18, "ababb", 5, 0, correct);
+    stream_test("ababababababababab", 18, "ababb", 5, correct, 0);
+
+    correct[0] = 0; correct[1] = 100;
+    test_match("aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 100, "aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaa", 65, 1, correct);
+    stream_test("aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 100, "aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaa", 65, correct, 1);
+
+    test_match("aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 200, "cccccaaaaacccccbbbbbcccccaaaaacccccbbbbbcccccaaaaacccccbbbbbccccc", 65, 2, correct);
+    stream_test("aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 200, "cccccaaaaacccccbbbbbcccccaaaaacccccbbbbbcccccaaaaacccccbbbbbccccc", 65, correct, 2);
+
+    test_match("aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 200, "aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaabb", 65, 2, correct);
+    stream_test("aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 200, "aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaabb", 65, correct, 2);
+
+    test_match("aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 200, "aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaabbb", 65, 2, correct);
+    stream_test("aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 200, "aaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaaaaabbbbbaaaaacccccaabbb", 65, correct, 2);
+
+    test_match("aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaaaaaaaaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaaaaaaaaaaaabbbbbaaaaabbbbb", 200, "aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaaaaaaa", 80, 2, correct);
+    stream_test("aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaaaaaaaaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaaaaaaaaaaaabbbbbaaaaabbbbb", 200, "aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaaaaaaa", 80, correct, 2);
+
+    test_match("aaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb", 200, "aaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbaaaaabbbbb", 80, 2, correct);
+    stream_test("aaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb", 200, "aaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbaaaaabbbbb", 80, correct, 2);
+
+    test_match("aaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaaabbbbbbbbbbbbbbaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaaabbbbbbbbbbbbbb", 200, "aaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaaabbbb", 90, 2, correct);
+    stream_test("aaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaaabbbbbbbbbbbbbbaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaaabbbbbbbbbbbbbb", 200, "aaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaaabbbb", 90, correct, 2);
+
+    int i;
+    for (i = 0; i < 25; i++) correct[i] = 5 * i;
+    test_match("aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb", 200, "aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb", 80, 25, correct);
+    stream_test("aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb", 200, "aaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb", 80, correct, 25);
+
+    free(correct);
 
     printf("All tests succeeded!\n");
     return 0;
