@@ -149,6 +149,10 @@ typedef struct mmatch_state_t {
     rbtree text;
 } *mmatch_state;
 
+int mmatch_size(mmatch_state state) {
+    return sizeof(int) * 2 * (state->m + 1) + rbtree_size(state->text) + sizeof(int*) * 2;
+}
+
 /*
     mmatch_state mmatch_build(char* P, int m)
     Creates an initial state for m-match algorithm.

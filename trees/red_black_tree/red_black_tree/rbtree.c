@@ -391,4 +391,13 @@ void rbtree_destroy(rbtree t) {
     free(t);
 }
 
+int node_size(rbtree_node n) {
+    if (n == NULL) return sizeof(rbtree_node);
+    return sizeof(rbtree_node) + sizeof(rbtree_node) + sizeof(void*) * 2 + sizeof(enum rbtree_node_color) + node_size(n->left) + node_size(n->right);
+}
+
+int rbtree_size(rbtree t) {
+    return node_size(t->root) + sizeof(rbtree);
+}
+
 #endif

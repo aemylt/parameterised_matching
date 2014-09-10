@@ -81,6 +81,10 @@ typedef struct kmp_state_t {
     int* failure;
 } *kmp_state;
 
+int kmp_size(kmp_state state) {
+    return (sizeof(char) + sizeof(int)) * state->m + sizeof(int) * 2 + sizeof(char*) + sizeof(int*);
+}
+
 /*
     kmp_state kmp_build(char* P, int m)
     Creates an initial KMP state for the pattern
